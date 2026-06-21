@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GameZone — Компьютерный клуб</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="header">
+    <nav class="nav container">
+      <a href="#" class="logo">Game<span>Zone</span></a>
+      <ul class="nav-links">
+        <li><a href="#about">О клубе</a></li>
+        <li><a href="#computers">Компьютеры</a></li>
+        <li><a href="#tariffs">Тарифы</a></li>
+        <li><a href="#booking">Бронь</a></li>
+        <li><a href="#contact">Контакты</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="container hero-content">
+      <p class="hero-tag">5 игровых станций · RTX 50-серия</p>
+      <h1>Твоя арена<br><span>начинается здесь</span></h1>
+      <p class="hero-desc">Компьютерный клуб GameZone — мощные ПК, низкая задержка, атмосфера для киберспорта и кооперативных игр.</p>
+      <div class="hero-actions">
+        <a href="#booking" class="btn btn-primary">Забронировать</a>
+        <a href="#computers" class="btn btn-outline">Смотреть ПК</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong>5</strong><span>ПК</span></div>
+        <div><strong>240+</strong><span>Hz</span></div>
+        <div><strong>24/7</strong><span>Работа</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section about">
+    <div class="container">
+      <h2 class="section-title">О клубе</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>GameZone — современный компьютерный клуб в центре города. У нас 5 игровых станций с видеокартами NVIDIA RTX 50-серии, механические клавиатуры и игровые мыши.</p>
+          <p>Идеально для CS2, Dota 2, Valorant, Fortnite и любых AAA-проектов. Уютная зона отдыха, быстрый интернет и дружелюбная атмосфера.</p>
+        </div>
+        <div class="about-features">
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Мощное железо</h3>
+            <p>RTX 5060 — RTX 5090, DDR5, SSD</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎮</div>
+            <h3>Игровая атмосфера</h3>
+            <p>RGB-подсветка, звук, комфортные кресла</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">☕</div>
+            <h3>Зона отдыха</h3>
+            <p>Напитки, снеки, Wi-Fi для гостей</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="computers" class="section computers">
+    <div class="container">
+      <h2 class="section-title">Наши компьютеры</h2>
+      <p class="section-subtitle">5 станций — от стандарт до VIP</p>
+      <div class="pc-grid">
+        {% for pc in computers %}
+        <article class="pc-card {% if pc.status == 'busy' %}pc-busy{% endif %}" data-pc-id="{{ pc.id }}">
+          <div class="pc-header">
+            <span class="pc-number">ПК #{{ pc.id }}</span>
+            <span class="pc-status status-{{ pc.status }}">
+              {% if pc.status == 'free' %}Свободен{% else %}Занят{% endif %}
+            </span>
+          </div>
+          <h3 class="pc-name">{{ pc.name }}</h3>
+          <ul class="pc-specs">
+            <li><span>CPU</span> {{ pc.cpu }}</li>
+            <li><span>GPU</span> {{ pc.gpu }}</li>
+            <li><span>RAM</span> {{ pc.ram }}</li>
+            <li><span>Монитор</span> {{ pc.monitor }}</li>
+          </ul>
+          {% if pc.id == 5 %}
+          <div class="pc-badge">VIP</div>
+          {% endif %}
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section id="tariffs" class="section tariffs">
+    <div class="container">
+      <h2 class="section-title">Тарифы</h2>
+      <div class="tariff-grid">
+        {% for t in tariffs %}
+        <div class="tariff-card {% if t.name == 'VIP' %}tariff-vip{% endif %}">
+          <h3>{{ t.name }}</h3>
+          <p class="tariff-price">{{ t.price }} <span>₽</span></p>
+          <p class="tariff-desc">{{ t.desc }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section id="booking" class="section booking">
+    <div class="container">
+      <h2 class="section-title">Бронирование</h2>
+      <p class="section-subtitle">Выберите ПК и оставьте заявку</p>
+      <form class="booking-form" id="bookingForm">
+        <div class="form-row">
+          <label>
+            Ваше имя
+            <input type="text" name="name" required placeholder="Алексей">
+          </label>
+          <label>
+            Телефон
+            <input type="tel" name="phone" required placeholder="+7 (999) 123-45-67">
+          </label>
+        </div>
+        <div class="form-row">
+          <label>
+            Компьютер
+            <select name="pc_id" required>
+              <option value="">Выберите ПК</option>
+              {% for pc in computers %}
+              <option value="{{ pc.id }}" {% if pc.status == 'busy' %}disabled{% endif %}>
+                ПК #{{ pc.id }} — {{ pc.name }}{% if pc.status == 'busy' %} (занят){% endif %}
+              </option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>
+            Часов
+            <select name="hours" required>
+              <option value="1">1 час</option>
+              <option value="2">2 часа</option>
+              <option value="3">3 часа</option>
+              <option value="4">4 часа</option>
+              <option value="5">5 часов</option>
+              <option value="8">8 часов (ночь)</option>
+            </select>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Отправить заявку</button>
+        <p class="form-message" id="formMessage" hidden></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="contact" class="section contact">
+    <div class="container">
+      <h2 class="section-title">Контакты</h2>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <p><strong>Адрес:</strong> ул. Геймерская, 42</p>
+          <p><strong>Телефон:</strong> +7 (900) 123-45-67</p>
+          <p><strong>Режим:</strong> Пн–Вс, 10:00 — 02:00</p>
+          <p><strong>Email:</strong> info@gamezone.ru</p>
+        </div>
+        <div class="contact-map">
+          <div class="map-placeholder">
+            <span>📍</span>
+            <p>Центр города, 5 мин от метро</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 GameZone. Компьютерный клуб.</p>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
